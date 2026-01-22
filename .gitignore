@@ -1,2 +1,5 @@
 # Temporary files
 *~
+
+.clang-format/
+.vscode/

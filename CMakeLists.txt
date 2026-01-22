@@ -15,19 +15,45 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
-find_package(geometry_msgs REQUIRED)
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
 
-#add_library(${PROJECT_NAME} ${SRC_FILES})
-include_directories(include)
-
-## Declare a cpp executable
-add_executable(${PROJECT_NAME}
-  src/leptrino_force_torque.cpp
+ament_auto_add_library(${PROJECT_NAME}
+  src/force_torque_sensor_node.cpp
+  src/force_torque_sensor.cpp
   src/rs_comm.cpp
 )
 
-ament_target_dependencies(${PROJECT_NAME} rclcpp geometry_msgs)
+rclcpp_components_register_nodes(${PROJECT_NAME}
+  "leptrino::ForceTorqueSensorNode"
+)
+
+ament_auto_add_executable(${PROJECT_NAME}_node
+  src/force_torque_sensor_node_main.cpp
+)
+
+install(DIRECTORY include/
+  DESTINATION include/
+)
+
+install(
+  DIRECTORY launch config
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+install(TARGETS ${PROJECT_NAME}_node
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+endif()
 
 ament_package()

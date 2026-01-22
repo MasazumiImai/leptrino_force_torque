@@ -1,0 +1,8 @@
+/leptrino_force_torque:
+  ros__parameters:
+
+    com_port: '/dev/ttyACM0'
+
+    frame_id: 'leptrino'
+
+    sampling_rate: 1000.0
