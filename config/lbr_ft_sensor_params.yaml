@@ -1,0 +1,23 @@
+/LF/ft_sensor:
+  ros__parameters:
+    com_port: '/dev/ttyACM0'
+    frame_id: 'LF_ft_sensor'
+    sampling_rate: 1000.0
+
+/LH/ft_sensor:
+  ros__parameters:
+    com_port: '/dev/ttyACM1'
+    frame_id: 'LH_ft_sensor'
+    sampling_rate: 1000.0
+
+/RH/ft_sensor:
+  ros__parameters:
+    com_port: '/dev/ttyACM2'
+    frame_id: 'RH_ft_sensor'
+    sampling_rate: 1000.0
+
+/RF/ft_sensor:
+  ros__parameters:
+    com_port: '/dev/ttyACM3'
+    frame_id: 'RF_ft_sensor'
+    sampling_rate: 1000.0
