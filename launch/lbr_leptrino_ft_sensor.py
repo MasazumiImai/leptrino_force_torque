@@ -33,11 +33,6 @@ def generate_ft_sensor_nodes(limb_names):
         print(f"Error loading FT sensor params: {e}")
         return []
 
-    if not ft_sensor_config.get('use_ft_sensor', False):
-        print("[leptrino_ft_sensor] use_ft_sensor is false. "
-              "Skipping FT nodes.")
-        return []
-
     ft_sensor_nodes = []
 
     for limb in limb_names:
