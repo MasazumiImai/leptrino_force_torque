@@ -15,23 +15,45 @@
 import os
 import yaml
 from ament_index_python.packages import get_package_share_directory
+from launch_ros.actions import Node
 from launch_ros.descriptions import ComposableNode
 
 
 def generate_ft_sensor_nodes(limb_names):
+    """Return standard Node list of Leptrino FT sensors."""
+
+    ft_sensor_config = _load_ft_sensor_config()
+    ft_sensor_nodes = []
+
+    for limb in limb_names:
+        ft_sensor_node_name = f"/{limb}/ft_sensor"
+
+        specific_ft_sensor_params = {}
+        if ft_sensor_node_name in ft_sensor_config:
+            specific_ft_sensor_params = ft_sensor_config[
+                ft_sensor_node_name].get('ros__parameters', {})
+        else:
+            print("Warning: No params found for"
+                  f" {ft_sensor_node_name} in yaml")
+
+        node = Node(
+            package='leptrino_force_torque',
+            executable='leptrino_force_torque_node',
+            namespace=limb,
+            name='ft_sensor',
+            parameters=[specific_ft_sensor_params],
+            output='screen'
+        )
+
+        ft_sensor_nodes.append(node)
+
+    return ft_sensor_nodes
+
+
+def generate_ft_sensor_composable_nodes(limb_names):
     """Return ComposableNode list of Leptrino FT sensors."""
 
-    lbr_ft_sensor_params_path = os.path.join(
-        get_package_share_directory('leptrino_force_torque'),
-        'config', 'lbr_ft_sensor_params.yaml')
-
-    ft_sensor_config = {}
-    try:
-        with open(lbr_ft_sensor_params_path, 'r') as f:
-            ft_sensor_config = yaml.safe_load(f)
-    except Exception as e:
-        print(f"Error loading FT sensor params: {e}")
-        return []
+    ft_sensor_config = _load_ft_sensor_config()
 
     ft_sensor_nodes = []
 
@@ -49,8 +71,8 @@ def generate_ft_sensor_nodes(limb_names):
         node = ComposableNode(
             package='leptrino_force_torque',
             plugin='leptrino::ForceTorqueSensorNode',
-            name='ft_sensor',
             namespace=limb,
+            name='ft_sensor',
             parameters=[specific_ft_sensor_params],
             extra_arguments=[{'use_intra_process_comms': True}],
         )
@@ -58,3 +80,18 @@ def generate_ft_sensor_nodes(limb_names):
         ft_sensor_nodes.append(node)
 
     return ft_sensor_nodes
+
+
+def _load_ft_sensor_config():
+    """Load yaml config."""
+
+    lbr_ft_sensor_params_path = os.path.join(
+        get_package_share_directory('leptrino_force_torque'),
+        'config', 'lbr_ft_sensor_params.yaml')
+
+    try:
+        with open(lbr_ft_sensor_params_path, 'r') as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        print(f"Error loading FT sensor params: {e}")
+        return {}
