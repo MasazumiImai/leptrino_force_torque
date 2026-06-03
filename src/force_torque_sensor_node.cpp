@@ -31,7 +31,9 @@ ForceTorqueSensorNode::ForceTorqueSensorNode(const rclcpp::NodeOptions & options
     return;
   }
 
-  wrench_pub_ = this->create_publisher<geometry_msgs::msg::WrenchStamped>("/wrench", 10);
+  std::string topic_name =
+    std::string(this->get_namespace()) + "/" + std::string(this->get_name()) + "/wrench";
+  wrench_pub_ = this->create_publisher<geometry_msgs::msg::WrenchStamped>("topic_name", 10);
 
   publish_timer_ = this->create_wall_timer(
     std::chrono::duration<double>(1.0 / rate_hz),

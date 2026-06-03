@@ -3,3 +3,7 @@
 
 .clang-format/
 .vscode/
+
+build/
+install/
+log/
