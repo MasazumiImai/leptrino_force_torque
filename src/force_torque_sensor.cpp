@@ -46,7 +46,7 @@ void ForceTorqueSensor::serialStart(const rclcpp::Logger & logger)
 {
   USHORT len = 0x04;             // Data length
 
-  RCLCPP_INFO(logger, "Start sensor.");
+  RCLCPP_DEBUG(logger, "Start sensor.");
   SendBuff[0] = len;             // Length
   SendBuff[1] = 0xFF;            // Sensor No.
   SendBuff[2] = CMD_DATA_START;  // Command type
@@ -59,7 +59,7 @@ void ForceTorqueSensor::serialStop(const rclcpp::Logger & logger)
 {
   USHORT len = 0x04;            // Data length
 
-  RCLCPP_INFO(logger, "Stop sensor.");
+  RCLCPP_DEBUG(logger, "Stop sensor.");
   SendBuff[0] = len;            // Length
   SendBuff[1] = 0xFF;           // Sensor No.
   SendBuff[2] = CMD_DATA_STOP;  // Command type
@@ -145,7 +145,7 @@ bool ForceTorqueSensor::getProductInfo(const rclcpp::Logger & logger)
 {
   USHORT len = 0x04;
 
-  RCLCPP_INFO(logger, "Get sensor information.");
+  RCLCPP_DEBUG(logger, "Get sensor information.");
   SendBuff[0] = len;          // Length
   SendBuff[1] = 0xFF;         // Sensor No.
   SendBuff[2] = CMD_GET_INF;  // Command type
@@ -166,13 +166,13 @@ bool ForceTorqueSensor::getProductInfo(const rclcpp::Logger & logger)
       ST_R_GET_INF * stGetInfo = (ST_R_GET_INF *)CommRcvBuff;
 
       stGetInfo->scFVer[F_VER_SIZE - 1] = '\0';
-      RCLCPP_INFO(logger, "  - Version: %s", stGetInfo->scFVer);
+      RCLCPP_DEBUG(logger, "  - Version: %s", stGetInfo->scFVer);
 
       stGetInfo->scSerial[SERIAL_SIZE - 1] = '\0';
-      RCLCPP_INFO(logger, "  - SerialNo: %s", stGetInfo->scSerial);
+      RCLCPP_DEBUG(logger, "  - SerialNo: %s", stGetInfo->scSerial);
 
       stGetInfo->scPName[P_NAME_SIZE - 1] = '\0';
-      RCLCPP_INFO(logger, "  - Type: %s", stGetInfo->scPName);
+      RCLCPP_DEBUG(logger, "  - Type: %s", stGetInfo->scPName);
 
       return true;
     }
@@ -188,7 +188,7 @@ bool ForceTorqueSensor::getLimit(const rclcpp::Logger & logger)
 {
   USHORT len = 0x04;
 
-  RCLCPP_INFO(logger, "Get sensor limit");
+  RCLCPP_DEBUG(logger, "Get sensor limit");
   SendBuff[0] = len;            // Length
   SendBuff[1] = 0xFF;           // Sensor No.
   SendBuff[2] = CMD_GET_LIMIT;  // Command type
@@ -211,7 +211,7 @@ bool ForceTorqueSensor::getLimit(const rclcpp::Logger & logger)
         conversion_factor[i] = stGetLimit->fLimit[i] * 1e-4;
       }
 
-      RCLCPP_INFO(
+      RCLCPP_DEBUG(
         logger, "Sensor limit values received successfully.");
 
       return true;
