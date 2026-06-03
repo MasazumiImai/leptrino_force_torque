@@ -25,7 +25,8 @@ ForceTorqueSensorNode::ForceTorqueSensorNode(const rclcpp::NodeOptions & options
 
   if (!sensor_.initialize(com_port, this->get_logger())) {
     RCLCPP_FATAL(
-      this->get_logger(), "Failed to initialize sensor on com port %s. Shutting down.",
+      this->get_logger(),
+      "\033[31m Failed to initialize sensor on com port %s. Shutting down. \033[0m",
       com_port.c_str());
     rclcpp::shutdown();
     return;
